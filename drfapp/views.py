@@ -4,8 +4,8 @@ from rest_framework import status
 from .models import snippet
 from .serializers import snippetSerializer
 from django.http import Http404
+from rest_framework import permissions
 from .permissions import IsOwnerOrReadOnly
-
 
 class SnippetList(APIView):
     def get(self, request):
@@ -16,19 +16,19 @@ class SnippetList(APIView):
     def post(self, request):
         serializer = snippetSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save(owner=request.user)
+            serializer.save(owner=request.user)  
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 
 class SnippetDetail(APIView):
-    permission_classes = [IsOwnerOrReadOnly]
-    
+    permission_classes = [IsOwnerOrReadOnly]  
+
     def get_object(self, pk):
         try:
             snippet = snippet.objects.get(pk=pk)
-            self.check_object_permissions(self.request, snippet) 
+            self.check_object_permissions(self.request, snippet)  
             return snippet
         except snippet.DoesNotExist:
             raise Http404
