@@ -3,6 +3,8 @@ from .models import snippet
 
 
 class snippetSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source='owner.username') 
+
     class Meta:
         model = snippet
-        fields = '__all__'
+        fields = ['id', 'title', 'code', 'linenos', 'language', 'style', 'owner']
